@@ -1,10 +1,12 @@
 package com.nodir.spring_data_jpa;
 
+import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootApplication
@@ -17,41 +19,70 @@ public class SpringDataJpaApplication {
     @Bean
     CommandLineRunner commandLineRunner(StudentRepository studentRepository) {
         return args -> {
-//            Student nodir = new Student(
-//                    "Nodir",
-//                    "Xakimov",
-//                    "nodirxakimov@gmail.com",
-//                    28
-//            );
-//            Student adham = new Student(
-//                    "Adham",
-//                    "Xakimov",
-//                    "adhamxakimov@gmail.com",
-//                    25
-//            );
-//
-//            studentRepository.saveAll(List.of(nodir, adham));
 
-            System.out.println(studentRepository.findStudentByEmail("nodirsayfullayevich@gmail.com"));
+            Faker faker = new Faker();
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String email = faker.internet().emailAddress();
+            Integer age = faker.number().numberBetween(1, 60);
+            Student student = new Student(firstName, lastName, email, age);
 
+            StudentIdCard studentIdCard = new StudentIdCard("123456798", student);
+            student.setStudentIdCard(studentIdCard);
 
-            studentRepository
-                    .findStudentByEmail("nodirsayfullayevich@gmail.com1")
-                    .ifPresentOrElse(System.out::println, () -> {
-                        System.out.println("No such student exists");
+            student.addBook(new Book("Clean Code", LocalDateTime.now().minusDays(4)));
+            student.addBook(new Book("Think and Grow Rich", LocalDateTime.now().minusDays(10)));
+            student.addBook(new Book("Spring Data JPA", LocalDateTime.now()));
+            student.addBook(new Book("Hamsa", LocalDateTime.now().minusYears(1)));
+
+            student.addEnrolment(new Enrolment(
+                new EnrolmentId(1L, 1L),
+                student,
+                new Course("Computer Science", "IT"),
+                LocalDateTime.now()
+            ));
+
+            student.addEnrolment(new Enrolment(
+                new EnrolmentId(1L, 2L),
+                student,
+                new Course("Digital Economy", "Economy"),
+                LocalDateTime.now().minusDays(12)
+            ));
+
+//            student.enrolToCourse(new Course("Computer Science", "IT"));
+//            student.enrolToCourse(new Course("Economy", "Economy"));
+
+            studentRepository.save(student);
+
+            studentRepository.findById(1L)
+                    .ifPresent(s -> {
+                        System.out.println("Fetching book lazy...");
+                        List<Book> books = student.getBooks();
+                        books.forEach(book -> {
+                            System.out.println(s.getFirstName() + " borrowed " + book.getBookName());
+                        });
                     });
 
-            studentRepository.findStudentByFirstNameEqualsAndAgeEquals(
-                    "Nodir",
-                    28
-            ).forEach(System.out::println);
-            studentRepository
-                    .findStudentsByFirstNameEqualsOrAgeEquals("Adham", 28)
-                    .forEach(System.out::println);
 
-            System.out.println("Deleting");
-            System.out.println(studentRepository.deleteStudentById(1L));
+
+
+//            studentIdCardRepository.findById(1L)
+//                    .ifPresent(System.out::println);
+//            studentIdCardRepository.deleteById(1L);
+
         };
     }
+
+//    private static void generateRandomStudents(StudentRepository studentRepository) {
+//        Faker faker = new Faker();
+//        for(int i = 0; i < 20; i++){
+//            String firstName = faker.name().firstName();
+//            String lastName = faker.name().lastName();
+//            String email = faker.internet().emailAddress();
+//            Integer age = faker.number().numberBetween(1, 60);
+//            Student student = new Student(firstName, lastName, email, age);
+//            studentRepository.save(student);
+//        }
+//    }
 
 }
