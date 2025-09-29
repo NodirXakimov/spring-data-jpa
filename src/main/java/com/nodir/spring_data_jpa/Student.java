@@ -1,10 +1,16 @@
 package com.nodir.spring_data_jpa;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity(name = "Student")
 @Table(
         name = "student",
@@ -78,78 +84,22 @@ public class Student {
         this.age = age;
     }
 
-    public Student() {
-
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public void setStudentIdCard(StudentIdCard studentIdCard) {
-        this.studentIdCard = studentIdCard;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
     public void addBook(Book book) {
-        if(!books.contains(book)) {
+        if (!books.contains(book)) {
             books.add(book);
             book.setStudent(this);
         }
     }
 
     public void removeBook(Book book) {
-        if(books.contains(book)) {
+        if (books.contains(book)) {
             books.remove(book);
             book.setStudent(null);
         }
     }
 
-    public List<Enrolment> getEnrolments() {
-        return enrolments;
-    }
-
     public void addEnrolment(Enrolment enrolment) {
-        if(!enrolments.contains(enrolment)) {
+        if (!enrolments.contains(enrolment)) {
             enrolments.add(enrolment);
         }
     }

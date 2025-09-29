@@ -1,10 +1,16 @@
 package com.nodir.spring_data_jpa;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity(name = "Course")
 @Table(name = "course")
 public class Course {
@@ -30,40 +36,9 @@ public class Course {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "course")
     private List<Enrolment> enrolments = new ArrayList<>();
 
-    public Course() {
-    }
-
     public Course(String name, String department) {
         this.name = name;
         this.department = department;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public List<Enrolment> getEnrolments() {
-        return enrolments;
     }
 
     public void addEnrolment(Enrolment enrolment) {
